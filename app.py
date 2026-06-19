@@ -7,7 +7,8 @@ import google.generativeai as genai
 
 # Page config to collapse the sidebar by default on load
 st.set_page_config(
-    page_title="IRIS Space Terminal Console", 
+    page_title=st.markdown("<h1 style='text-align: center; font-size: 30px;'>IRIS Space Terminal Console</h1>", unsafe_allow_html=True)
+, 
     page_icon="👁️", 
     layout="centered",
     initial_sidebar_state="collapsed"
