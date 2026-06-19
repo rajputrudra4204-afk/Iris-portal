@@ -264,7 +264,7 @@ if "pending_prompt" not in st.session_state:
 def verify_credentials(role, passcode):
     if role == "Guest User":
         return True
-    elif role == "VIP Study Partner" and passcode == st.session_state["vip_code"]:
+    elif role == "VIP Member" and passcode == st.session_state["vip_code"]:
         return True
     elif role == "System Owner" and passcode == st.session_state["owner_code"]:
         return True
