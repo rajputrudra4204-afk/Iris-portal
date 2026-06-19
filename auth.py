@@ -3,7 +3,7 @@ VIP_PASSCODE = "VIP2919"
 OWNER_PASSCODE = "pass@Owner02"
 
 # Yahan apni Google Gemini API Key paste karein
-GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE"
+GEMINI_API_KEY = ""
 
 def validate_login(role, entered_code):
     if role == "Guest User":
