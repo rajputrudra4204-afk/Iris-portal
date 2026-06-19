@@ -321,6 +321,7 @@ def render_black_hole_vector(width_px=120):
     <div class='glowing-title' style='color:#ffffff; font-size: 28px; letter-spacing: 5px; margin-bottom: 2px;'>IRIS</div>
     <!-- Futuristic Subheading Full Form -->
     <div style='text-align: center; color: #06b6d4; font-size: 11px; font-weight: bold; letter-spacing: 2.5px; margin-bottom: 25px;'>INTELLIGENT RESPONSIVE INFORMATION SYSTEM</div>
+    <div style='text-align: center; color: #06b6d4; font-size: 10px; font-weight: bold; letter-spacing: 2.5px; margin-bottom: 25px;'>-:Developed by Rudra:-</div>
     """
 
 # --- 3. GATEKEEPER WELCOME LOGIN PANEL ---
