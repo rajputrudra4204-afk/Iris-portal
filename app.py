@@ -19,7 +19,12 @@ if "vip_code" not in st.session_state:
 if "owner_code" not in st.session_state:
     st.session_state["owner_code"] = getattr(auth, "OWNER_PASSCODE", "OWNER7788")
 
-GEMINI_KEY = getattr(auth, "GEMINI_API_KEY", "YOUR_GEMINI_API_KEY_HERE")
+if "GEMINI_API_KEY" in st.secrets:
+    GEMINI_KEY = st.secrets["GEMINI_API_KEY"]
+elif "gemini_key" in st.secrets:
+    GEMINI_KEY = st.secrets["gemini_key"]
+else:
+    GEMINI_KEY = getattr(auth, "GEMINI_API_KEY", "YOUR_GEMINI_API_KEY_HERE")
 
 # --- 🌌 1. IMMERSIVE SPACE CONSOLE CSS (Twinkling Stars, Accretion Disks, & Smooth Inputs) ---
 st.markdown("""
