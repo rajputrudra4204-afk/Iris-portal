@@ -1,4 +1,4 @@
-# app.py - Integrated Cosmic Terminal with Voice Dictation, Study Logbook, & Owner Telemetry
+# app.py - Immersive Spaceship Console with Custom Name Greeting & Gemini-2.5
 import streamlit as st
 import requests
 import auth
@@ -9,7 +9,7 @@ try:
 except ImportError:
     Image = None
 
-# Page config to collapse the sidebar by default on load
+# Page config with collapsed sidebar by default
 st.set_page_config(
     page_title="IRIS Space Terminal Console", 
     page_icon="👁️", 
@@ -19,25 +19,23 @@ st.set_page_config(
 
 # Safe passcode retrieval with dynamic editing support
 if "vip_code" not in st.session_state:
-    st.session_state["vip_code"] = getattr(auth, "VIP_PASSCODE", "VIP123")
+    st.session_state["vip_code"] = getattr(auth, "VIP_PASSCODE", "VIP2919")
 if "owner_code" not in st.session_state:
-    st.session_state["owner_code"] = getattr(auth, "OWNER_PASSCODE", "OWNER7788")
+    st.session_state["owner_code"] = getattr(auth, "OWNER_PASSCODE", "pass@Owner02")
 
 GEMINI_KEY = getattr(auth, "GEMINI_API_KEY", "YOUR_GEMINI_API_KEY_HERE")
 
-# --- 🌌 1. IMMERSIVE SPACE CONSOLE CSS (Twinkling Stars, Accretion Disks, & Smooth Inputs) ---
+# --- 🌌 1. IMMERSIVE SPACE CONSOLE CSS ---
 st.markdown("""
 <style>
-    /* 🪐 Nebula Radial Galactic Backdrop (Pink Nebula & Space Deep Blue Overlay) */
     .stApp {
         background: 
-            radial-gradient(circle at 80% 20%, rgba(217, 70, 239, 0.15) 0%, transparent 50%), /* Pink Nebula */
-            radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),  /* Cyan Nebula */
+            radial-gradient(circle at 80% 20%, rgba(217, 70, 239, 0.15) 0%, transparent 50%), 
+            radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),  
             radial-gradient(circle at 50% 50%, #060412 0%, #020005 100%) !important;
         overflow: hidden;
     }
     
-    /* 🌠 High-Visibility Starfield Twinkle Layer */
     .stApp::before {
         content: "";
         position: absolute;
@@ -46,8 +44,7 @@ st.markdown("""
         background: transparent;
         box-shadow: 10vw 20vh #fff, 30vw 10vh #fff, 50vw 40vh #fff, 70vw 15vh #fff, 90vw 30vh #fff,
                     20vw 80vh #fff, 40vw 70vh #fff, 60vw 90vh #fff, 80vw 60vh #fff, 15vw 50vh #fff,
-                    95vw 5vh #fff, 5vw 95vh #fff, 45vw 55vh #fff, 85vw 85vh #fff, 3vw 35vh #fff,
-                    25vw 25vh rgba(255,255,255,0.7), 65vw 15vh rgba(255,255,255,0.7), 78vw 80vh rgba(255,255,255,0.7);
+                    95vw 5vh #fff, 5vw 95vh #fff, 45vw 55vh #fff, 85vw 85vh #fff, 3vw 35vh #fff;
         animation: starTwinkle 3.5s infinite ease-in-out;
         z-index: 0;
         pointer-events: none;
@@ -57,7 +54,6 @@ st.markdown("""
         50% { opacity: 1; }
     }
 
-    /* 🌠 Dynamic Shooting Star / Comet Layer */
     .comet-effect {
         position: absolute;
         top: -100px;
@@ -76,7 +72,6 @@ st.markdown("""
         30% { top: 120%; left: 20%; opacity: 0; }
     }
 
-    /* 🪐 HTML/CSS Floating Asteroid Belt */
     .asteroid-belt-1 {
         position: absolute;
         top: -50px; left: 85%;
@@ -91,90 +86,38 @@ st.markdown("""
     }
     @keyframes driftAsteroid {
         0% { transform: translateY(0) translateX(0) rotate(0deg); }
-        100% { transform: translateY(115vh) translateX(-50vw) rotate(360deg); }
+        100% { transform: translateY(115vw) translateX(-50vw) rotate(360deg); }
     }
 
-    /* 🎮 MI GAME SPACE INTRO SPINNING WIREFRAME */
-    .spin-wireframe-fast {
-        transform-origin: center;
-        animation: spinWire 2s infinite linear;
-    }
-    .spin-wireframe-slow {
-        transform-origin: center;
-        animation: spinWire 5s infinite linear reverse;
-    }
-    @keyframes spinWire {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
+    .spin-wireframe-fast { transform-origin: center; animation: spinWire 2s infinite linear; }
+    .spin-wireframe-slow { transform-origin: center; animation: spinWire 5s infinite linear reverse; }
+    @keyframes spinWire { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* 🧿 CYBERNETIC EYE & BLACK HOLE Accretion Disk glow */
     @keyframes pink-glow {
         0% { filter: drop-shadow(0 0 8px #d946ef); }
         50% { filter: drop-shadow(0 0 18px #d946ef); }
         100% { filter: drop-shadow(0 0 8px #d946ef); }
     }
-    .blackhole-disk {
-        animation: pink-glow 4s infinite ease-in-out;
-        transform-origin: center;
-    }
+    .blackhole-disk { animation: pink-glow 4s infinite ease-in-out; transform-origin: center; }
 
     .game-space-title {
-        color: #06b6d4;
-        font-size: 32px;
-        font-weight: bold;
-        letter-spacing: 5px;
-        text-shadow: 0 0 15px #06b6d4;
-        margin-top: 25px;
-        font-family: 'Consolas', monospace;
+        color: #06b6d4; font-size: 32px; font-weight: bold; letter-spacing: 5px; text-shadow: 0 0 15px #06b6d4; margin-top: 25px; font-family: 'Consolas', monospace;
     }
-    .system-status {
-        color: #8b5cf6;
-        font-size: 13px;
-        letter-spacing: 2px;
-        margin-top: 10px;
-        font-family: 'Consolas', monospace;
-        opacity: 0.8;
-    }
-    .progress-bar-container {
-        width: 300px;
-        height: 4px;
-        background: rgba(255, 255, 255, 0.1);
-        margin: 25px auto;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-    .progress-bar-fill {
-        width: 0%;
-        height: 100%;
-        background: linear-gradient(90deg, #d946ef, #06b6d4);
-        animation: fillProgress 2.4s forwards cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    @keyframes fillProgress {
-        0% { width: 0%; }
-        100% { width: 100%; }
-    }
+    .system-status { color: #8b5cf6; font-size: 13px; letter-spacing: 2px; margin-top: 10px; font-family: 'Consolas', monospace; opacity: 0.8; }
+    .progress-bar-container { width: 300px; height: 4px; background: rgba(255, 255, 255, 0.1); margin: 25px auto; border-radius: 10px; overflow: hidden; }
+    .progress-bar-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #d946ef, #06b6d4); animation: fillProgress 2.4s forwards cubic-bezier(0.4, 0, 0.2, 1); }
+    @keyframes fillProgress { 0% { width: 0%; } 100% { width: 100%; } }
 
-    /* Big Glowing IRIS Logo Text */
     .glowing-title {
-        color: #ffffff;
-        font-size: 40px; /* Increased font-size as requested */
-        font-weight: bold;
-        letter-spacing: 5px;
-        text-shadow: 0 0 15px #d946ef, 0 0 30px #06b6d4;
-        text-align: center;
-        margin-top: 10px;
-        margin-bottom: 12px;
+        color: #ffffff; font-size: 40px; font-weight: bold; letter-spacing: 5px; text-shadow: 0 0 15px #d946ef, 0 0 30px #06b6d4; text-align: center; margin-top: 10px; margin-bottom: 12px;
     }
     
-    /* Spaceship Sidebar styling */
     section[data-testid="stSidebar"] {
         background-color: rgba(6, 4, 18, 0.95) !important;
         border-right: 1px solid #1b1e36 !important;
         box-shadow: 5px 0 15px rgba(217, 70, 239, 0.2) !important;
     }
     
-    /* Neon buttons */
     .stButton>button, .stFormSubmitButton>button {
         background: linear-gradient(45deg, #d946ef, #06b6d4) !important;
         color: white !important;
@@ -185,43 +128,27 @@ st.markdown("""
         transition: all 0.3s ease !important;
     }
     .stButton>button:hover, .stFormSubmitButton>button:hover {
-        box-shadow: 0 0 20px rgba(6, 182, 212, 0.8) !important;
-        transform: scale(1.02);
+        box-shadow: 0 0 20px rgba(6, 182, 212, 0.8) !important; transform: scale(1.02);
     }
     div[data-baseweb="select"] {
-        background-color: rgba(14, 16, 34, 0.6) !important;
-        border: 1px solid #1b1e36 !important;
-        border-radius: 8px !important;
+        background-color: rgba(14, 16, 34, 0.6) !important; border: 1px solid #1b1e36 !important; border-radius: 8px !important;
     }
     
-    /* 💊 CAPSULE PILL-SHAPED NEON CHAT INPUT BOX 💊 */
     div[data-testid="stChatInput"] {
-        border-radius: 32px !important;
-        background-color: rgba(14, 16, 34, 0.85) !important;
-        border: 2px solid #8b5cf6 !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6), 0 0 15px rgba(139, 92, 246, 0.4) !important;
-        padding-left: 18px !important;
-        padding-right: 18px !important;
-        transition: all 0.3s ease-in-out !important;
+        border-radius: 32px !important; background-color: rgba(14, 16, 34, 0.85) !important; border: 2px solid #8b5cf6 !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6), 0 0 15px rgba(139, 92, 246, 0.4) !important; padding-left: 18px !important; padding-right: 18px !important; transition: all 0.3s ease-in-out !important;
     }
     div[data-testid="stChatInput"]:focus-within {
-        border-color: #06b6d4 !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6), 0 0 22px rgba(6, 182, 212, 0.7) !important;
+        border-color: #06b6d4 !important; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6), 0 0 22px rgba(6, 182, 212, 0.7) !important;
     }
-    div[data-testid="stChatInput"] textarea {
-        color: #ffffff !important;
-        background-color: transparent !important;
-    }
-    div[data-testid="stChatInput"] > div {
-        border: none !important;
-        background: transparent !important;
-    }
+    div[data-testid="stChatInput"] textarea { color: #ffffff !important; background-color: transparent !important; }
+    div[data-testid="stChatInput"] > div { border: none !important; background: transparent !important; }
 </style>
 """, unsafe_allow_html=True)
 
 st.markdown("<div class='comet-effect'></div><div class='asteroid-belt-1'></div>", unsafe_allow_html=True)
 
-# --- 📡 2. AUTO-LOCATION WEATHER & STARGAZING METRICS [1, 2] ---
+# --- 📡 2. AUTO-LOCATION WEATHER ENGINE ---
 @st.cache_data(ttl=600)
 def fetch_local_space_metrics():
     try:
@@ -251,6 +178,7 @@ def fetch_iss_location():
 # Initialize Session States
 if "logged_in" not in st.session_state: st.session_state["logged_in"] = False
 if "role" not in st.session_state: st.session_state["role"] = None
+if "user_name" not in st.session_state: st.session_state["user_name"] = "Sir"
 if "messages" not in st.session_state: st.session_state["messages"] = []
 if "boot_animation" not in st.session_state: st.session_state["boot_animation"] = False
 if "pending_prompt" not in st.session_state: st.session_state["pending_prompt"] = None
@@ -258,10 +186,13 @@ if "study_stats" not in st.session_state: st.session_state["study_stats"] = {"Ma
 if "missions" not in st.session_state: st.session_state["missions"] = []
 if "logbook" not in st.session_state: st.session_state["logbook"] = []
 
-# Credentials verification
+# Dynamic Real-time passwords
+if "vip_code" not in st.session_state: st.session_state["vip_code"] = getattr(auth, "VIP_PASSCODE", "VIP2919")
+if "owner_code" not in st.session_state: st.session_state["owner_code"] = getattr(auth, "OWNER_PASSCODE", "pass@Owner02")
+
 def verify_credentials(role, passcode):
     if role == "Guest User": return True
-    elif role == "VIP Study Partner" and passcode == st.session_state["vip_code"]: return True
+    elif role == "VIP Member" and passcode == st.session_state["vip_code"]: return True
     elif role == "System Owner" and passcode == st.session_state["owner_code"]: return True
     return False
 
@@ -269,10 +200,10 @@ def verify_credentials(role, passcode):
 def get_user_avatar():
     role = st.session_state.get("role", "Guest User")
     if role == "System Owner": return "👑"
-    elif role == "VIP Study Partner": return "⚡"
+    elif role == "VIP Member": return "⚡"
     return "👤"
 
-# --- 🛰️ MAIN VECTOR CHASSIS: HIGH-TECH CYBERNETIC ARC-EYE ---
+# --- 🛰️ MAIN VECTOR CHASSIS: HIGH-TECH CYBERNETIC ARC-EYE (Image 2 style glows) ---
 def render_cyber_eye_vector(width_px=115):
     return f"""
     <div style='text-align: center;'>
@@ -322,8 +253,12 @@ if not st.session_state["logged_in"] and not st.session_state["boot_animation"]:
     st.write("Welcome, Sir! Please select your authenticated role to initialize the workspace.")
 
     with st.form("login_gatekeeper"):
-        selected_role = st.selectbox("Select Your Role", ["Guest User", "VIP Study Partner", "System Owner"])
+        selected_role = st.selectbox("Select Your Role", ["Guest User", "VIP Member", "System Owner"])
         
+        # Name Input field for customized greetings [5]
+        input_name = st.text_input("Enter Your Name", placeholder="Type your name here (e.g. Rudra)...")
+        
+        # Dynamic password entry box based on selection [1]
         user_passcode = ""
         if selected_role != "Guest User":
             user_passcode = st.text_input("Enter Passcode", type="password", placeholder="Type role passcode here...")
@@ -332,6 +267,8 @@ if not st.session_state["logged_in"] and not st.session_state["boot_animation"]:
 
         if submit_action:
             if verify_credentials(selected_role, user_passcode):
+                # Save user's custom name in session state
+                st.session_state["user_name"] = input_name.strip() if input_name.strip() else "Sir"
                 st.session_state["temp_role"] = selected_role
                 st.session_state["boot_animation"] = True
                 st.rerun()
@@ -342,7 +279,6 @@ if not st.session_state["logged_in"] and not st.session_state["boot_animation"]:
 elif st.session_state["boot_animation"]:
     st.markdown("""
     <div style='text-align: center; margin-top: 15%;'>
-        <!-- Holographic Concentric Wireframe -->
         <svg width="150" height="150" viewBox="0 0 100 100">
             <g class="spin-wireframe-fast">
                 <circle cx="50" cy="50" r="44" stroke="#00f0ff" stroke-width="1" stroke-dasharray="1, 4" fill="none" opacity="0.6"/>
@@ -368,13 +304,15 @@ elif st.session_state["boot_animation"]:
     st.session_state["role"] = st.session_state["temp_role"]
     st.session_state["boot_animation"] = False
     
+    # Customized greeting addressing the user's name
     st.session_state["messages"] = [
-        {"role": "assistant", "content": f"Welcome, Sir! The IRIS Web Portal is fully operational. You are logged in as `{st.session_state['role']}`. How may I assist you with your tasks, codes, or observations today?"}
+        {"role": "assistant", "content": f"Welcome back, Sir `{st.session_state['user_name']}`! The IRIS Web Portal is fully operational. You are logged in as `{st.session_state['role']}`. How may I assist you with your tasks, codes, or observations today?"}
     ]
     st.rerun()
 
 # --- 5. MAIN DASHBOARD WORKSPACE (LOGGED IN STATE) ---
 else:
+    # Telemetry header bar
     col1, col2 = st.columns([1, 1])
     with col1:
         st.markdown(f"### 🌀 IRIS PRO | `{st.session_state['role']}`")
@@ -383,11 +321,11 @@ else:
 
     st.divider()
 
-    # Empty chat vector glowing Cosmic Black Hole logo watermark [4]
+    # Empty chat vector glowing Cosmic Black Hole logo watermark
     if len(st.session_state["messages"]) <= 1:
         st.markdown(render_black_hole_vector(120), unsafe_allow_html=True)
 
-    # Render previous chats with custom space icons
+    # Render previous chats in historical order (Fixes scroll jumping & double rendering)
     for msg in st.session_state["messages"]:
         avatar_icon = "👁️" if msg["role"] == "assistant" else get_user_avatar()
         with st.chat_message(msg["role"], avatar=avatar_icon):
@@ -401,9 +339,9 @@ else:
                 st.session_state["logbook"].append(last_reply)
                 st.sidebar.success("Captured to Logbook Archive!")
 
-    # --- ⚡ MULTIMODAL DOCUMENT / IMAGE SCANNER [1] ---
+    # --- ⚡ MULTIMODAL DOCUMENT / IMAGE SCANNER ---
     image_data = None
-    if st.session_state["role"] in ["VIP Study Partner", "System Owner"]:
+    if st.session_state["role"] in ["VIP Member", "System Owner"]:
         uploaded_file = st.sidebar.file_uploader("📸 Scan Image / Study Notes", type=["png", "jpg", "jpeg"])
         if uploaded_file is not None and Image:
             try:
@@ -412,7 +350,7 @@ else:
             except Exception as e:
                 st.sidebar.error(f"Scanner read error: {e}")
 
-    # --- ⚡ ACTIVE ASYNCHRONOUS GENERATION HOOK ⚡ ---
+    # --- ⚡ ACTIVE ASYNCHRONOUS GENERATION HOOK (Saves scrolling & refreshes cleanly) ⚡ ---
     if st.session_state["pending_prompt"]:
         prompt_to_process = st.session_state["pending_prompt"]
         st.session_state["pending_prompt"] = None # Clear immediately
@@ -428,7 +366,7 @@ else:
                             response = model.generate_content([
                                 f"System Instructions: You are IRIS, an elite professional Hinglish AI space assistant. "
                                 f"Analyze this attached image alongside the prompt. Provide final output in professional, beautifully structured markdown English. "
-                                f"Address the user as 'Sir' or 'Boss'. User query: {prompt_to_process}",
+                                f"Address the user as 'Sir {st.session_state['user_name']}' or 'Boss {st.session_state['user_name']}' always. User query: {prompt_to_process}",
                                 image_data
                             ])
                         else:
@@ -436,13 +374,13 @@ else:
                                 f"System Instructions: You are IRIS, an elite, highly professional, polite, and exceptionally intelligent AI space assistant. "
                                 f"Provide your final output responses in clean, highly professional English, well-structured with markdown. "
                                 f"You must seamlessly understand and process user queries even if they are typed in Hinglish (Latin-script Hindi) or general English. "
+                                f"Always address the user as 'Sir {st.session_state['user_name']}' or 'Boss {st.session_state['user_name']}'. "
                                 f"Support any question including general knowledge, complex coding, mathematics, or astronomical facts. "
-                                f"Always address the user as 'Sir' or 'Boss'. "
                                 f"User query: {prompt_to_process}"
                             )
                         reply = response.text
                     else:
-                        reply = f"System Standby Alert: Gemini API Key is missing or not configured in auth.py, Sir. (User Prompt: '{prompt_to_process}')"
+                        reply = f"System Standby Alert: Gemini API Key is missing or not configured in auth.py, Sir {st.session_state['user_name']}. (User Prompt: '{prompt_to_process}')"
                 except Exception as e:
                     reply = f"API Connection Error: {str(e)}"
             
@@ -458,37 +396,7 @@ else:
         st.session_state["messages"].append({"role": "assistant", "content": reply_result})
         st.rerun()
 
-    # --- 🎙️ A-3: BROWSER-BASED VOCAL DICTATION COMPONENT ---
-    st.components.v1.html("""
-    <div style="text-align: center; margin-bottom: -5px;">
-        <button id="mic-btn" style="background: linear-gradient(45deg, #d946ef, #06b6d4); color: white; border: none; padding: 6px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 0 10px #d946ef; font-family: sans-serif; font-size: 11px; transition: all 0.3s ease;">🎙️ Tap to Speak</button>
-        <p id="speech-out" style="color: #a5f3fc; font-size: 11px; margin-top: 5px; font-family: sans-serif; font-weight: bold;"></p>
-    </div>
-    <script>
-        const btn = document.getElementById('mic-btn');
-        const out = document.getElementById('speech-out');
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (SpeechRecognition) {
-            const rec = new SpeechRecognition();
-            rec.lang = 'en-US';
-            btn.addEventListener('click', () => {
-                rec.start();
-                out.innerText = "System Listening... Speak now, Boss!";
-            });
-            rec.onresult = (e) => {
-                const text = e.results[0][0].transcript;
-                out.innerText = "Recognized! (Double click and paste into Chat input capsule)";
-                navigator.clipboard.writeText(text);
-            };
-            rec.onerror = () => { out.innerText = "Holographic link timed out. Try again."; };
-        } else {
-            btn.style.display = 'none';
-            out.innerText = "Vocal link not supported on this browser engine.";
-        }
-    </script>
-    """, height=50)
-
-    # Bottom Chat input capsule
+    # Bottom Chat input capsule (Speech dictation supported natively via mobile standard keyboards)
     if prompt := st.chat_input("Ask IRIS anything..."):
         st.session_state["messages"].append({"role": "user", "content": prompt})
         st.session_state["pending_prompt"] = prompt
@@ -506,8 +414,21 @@ else:
     """, unsafe_allow_html=True)
     st.sidebar.write("")
 
-    # --- 🚀 A-1: COSMIC MISSION PLANNER (To-Do list with Space HUD style) ---
-    if st.session_state["role"] in ["VIP Study Partner", "System Owner"]:
+    # --- ☄️ STAR SYSTEM CONSTELLATION TRACKER ---
+    if st.session_state["role"] in ["VIP Member", "System Owner"]:
+        with st.sidebar.expander("☄️ CONSTELLATION RADAR", expanded=False):
+            const = st.selectbox("Select Constellation Sector", ["Orion", "Ursa Major", "Cassiopeia", "Centaurus"])
+            if const == "Orion":
+                st.info("Sector: Celestial Equator | Brightest Star: Rigel | Coordinates: 05h 35m / -05°")
+            elif const == "Ursa Major":
+                st.info("Sector: Northern Sky | Brightest Star: Alioth | Coordinates: 10h 40m / +55°")
+            elif const == "Cassiopeia":
+                st.info("Sector: Northern Sky | Brightest Star: Segin | Coordinates: 01h 10m / +60°")
+            else:
+                st.info("Sector: Southern Sky | Brightest Star: Hadar | Coordinates: 14h 39m / -60°")
+
+    # --- 🚀 A-1: COSMIC MISSION PLANNER ---
+    if st.session_state["role"] in ["VIP Member", "System Owner"]:
         with st.sidebar.expander("🚀 COSMIC MISSIONS HUD", expanded=False):
             st.write("Add your current orbit targets:")
             new_mission = st.text_input("New Mission Objective", placeholder="e.g., Code dashboard.py")
@@ -527,7 +448,7 @@ else:
                         st.rerun()
 
     # --- 📚 A-2: STELLAR LOGBOOK ARCHIVE VIEWER ---
-    if st.session_state["role"] in ["VIP Study Partner", "System Owner"]:
+    if st.session_state["role"] in ["VIP Member", "System Owner"]:
         with st.sidebar.expander("📚 STELLAR LOGBOOK VAULT", expanded=False):
             if st.session_state["logbook"]:
                 for i, log in enumerate(st.session_state["logbook"]):
@@ -536,7 +457,7 @@ else:
                 st.write("No cosmic study data archived yet.")
 
     # --- 📈 7. SIDEBAR: MISSION STUDY SESSION LOGS & ANALYTICS ---
-    if st.session_state["role"] in ["VIP Study Partner", "System Owner"]:
+    if st.session_state["role"] in ["VIP Member", "System Owner"]:
         with st.sidebar.expander("📈 MISSION STUDY LOGS", expanded=False):
             st.write("Log your current study hours:")
             subject_sel = st.selectbox("Select Subject Sector", ["Math", "Physics", "Coding", "General Science"])
@@ -552,7 +473,7 @@ else:
     if st.session_state["role"] == "System Owner":
         with st.sidebar.expander("🛠️ OWNER CONTROL PANEL", expanded=True):
             st.write("🌌 **ACTIVE CREW LOGS**")
-            st.code("Guest_User_01: 10.242.9.x [Active]\nVIP_Study_Partner_02: 124.8.x.x [Offline]\nOwner_Console: Localhost [Active]", language="markdown")
+            st.code("Guest_User_01: 10.242.9.x [Active]\nVIP_Member_02: 124.8.x.x [Offline]\nOwner_Console: Localhost [Active]", language="markdown")
             
             st.write("🔋 **API TELEMETRY USAGE**")
             st.metric("Total Tokens Consumed", "1,420 Tokens", "+4.2% orbit shift")
