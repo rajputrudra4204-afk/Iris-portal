@@ -275,7 +275,7 @@ def get_user_avatar():
     role = st.session_state.get("role", "Guest User")
     if role == "System Owner":
         return "👑" # Owner Avatar
-    elif role == "VIP Study Partner":
+    elif role == "VIP Member":
         return "⚡" # VIP Avatar
     return "👤"     # Guest Avatar
 
